@@ -18,25 +18,24 @@ import java.util.List;
 @ToString
 @Entity
 public class Client {
-    @Id @NotNull @NotEmpty
+    @Id @NotNull
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer idClient;
     private String nom;
     private String prenom;
     @JsonFormat(pattern="dd-MM-yyyy")
-    private Date dateDeNaissance;
+    private String dateNaissance;
     private String telephone;
-    private String adresse;
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private Date dateCreation;
+    private String adressePostale;
+    private String dateCreation;
     @ManyToMany
     @JoinTable(name="CLIENT_COMPTE",
             joinColumns=@JoinColumn(name="idClient"),
             inverseJoinColumns=@JoinColumn(name="iban")
     )
     private List<Compte> comptes;
-    private int codeBanque;
-    private int codeGuichet;
+    private int codeBanque = 12345;
+    private int codeGuichet = 56789;
 
 
 }
