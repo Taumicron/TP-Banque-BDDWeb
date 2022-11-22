@@ -34,7 +34,9 @@ public class Client {
             inverseJoinColumns=@JoinColumn(name="iban")
     )
     private List<Compte> comptes;
+    @Builder.Default
     private int codeBanque = 12345;
+    @Builder.Default
     private int codeGuichet = 56789;
 
 
