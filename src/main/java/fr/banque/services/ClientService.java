@@ -1,5 +1,6 @@
 package fr.banque.services;
 
+import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.controllers.dto.client.CreateClientRequest;
 import fr.banque.controllers.dto.client.CreateClientResponse;
 import fr.banque.entites.Client;
@@ -15,7 +16,7 @@ public class ClientService {
     private ClientRepository repClient;
 
 
-    public CreateClientResponse saveClient(CreateClientRequest c){
+    public CreateClientResponse saveClient(CreateClientRequest c) throws BadRequestException {
         Client toCreate = this.repClient.save(Client.builder().prenom(c.getPrenom())
                 .nom(c.getNom())
                 .dateNaissance(c.getDateNaissance())

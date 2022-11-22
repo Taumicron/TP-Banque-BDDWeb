@@ -1,5 +1,6 @@
 package fr.banque.controllers;
 
+import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.controllers.dto.ErreurRequestMsg;
 import fr.banque.controllers.dto.client.CreateClientRequest;
 import fr.banque.controllers.dto.client.CreateClientResponse;
@@ -25,10 +26,12 @@ public class CompteController {
 
     @PostMapping
     public ResponseEntity createCompte(@RequestBody CreateCompteRequest request){
-        try{
+        try {
             return ResponseEntity.created(null).body(this.serCompte.saveCompte(request));
-        } catch (Exception e) {
+        } catch (BadRequestException e){
             return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         }
     }
 }

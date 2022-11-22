@@ -2,8 +2,9 @@ package fr.banque.controllers;
 
 import fr.banque.controllers.dto.ErreurRequestMsg;
 import fr.banque.controllers.dto.client.CreateClientRequest;
-import fr.banque.controllers.dto.client.CreateClientResponse;
+import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.services.ClientService;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,8 +20,10 @@ public class ClientController {
 
     @PostMapping
     public ResponseEntity createClient(@RequestBody CreateClientRequest request){
-        try{
+        try {
             return ResponseEntity.created(null).body(this.serClient.saveClient(request));
+        } catch (BadRequestException e){
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         }

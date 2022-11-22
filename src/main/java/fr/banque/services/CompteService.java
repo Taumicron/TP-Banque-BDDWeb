@@ -1,5 +1,6 @@
 package fr.banque.services;
 
+import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.controllers.dto.compte.CreateCompteRequest;
 import fr.banque.controllers.dto.compte.CreateCompteResponse;
 import fr.banque.entites.Client;
@@ -32,11 +33,13 @@ public class CompteService {
 
         return iban;
     }
-    public CreateCompteResponse saveCompte(CreateCompteRequest request){
+    public CreateCompteResponse saveCompte(CreateCompteRequest request) throws BadRequestException {
         long numCompte = new Random().nextLong((long)1E12);
 
         List<Client> titulaires = this.repClient.findAllById(request.getTitulairesCompte().stream().map(c -> c.getIdClient()).collect(Collectors.toList()));
-
+        if (titulaires.size() == 0 || titulaires.size() > 2){
+            throw new BadRequestException();
+        }
 
         Compte toSave = Compte.builder()
                         .intituleCompte(request.getIntituleCompte())
