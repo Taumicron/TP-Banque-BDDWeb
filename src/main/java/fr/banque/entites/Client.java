@@ -34,6 +34,8 @@ public class Client {
             inverseJoinColumns=@JoinColumn(name="iban")
     )
     private List<Compte> comptes;
+    @OneToMany(mappedBy = "titulaire")
+    private List<Carte> cartes;
     @Builder.Default
     private int codeBanque = 12345;
     @Builder.Default

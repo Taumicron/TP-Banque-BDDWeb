@@ -18,9 +18,10 @@ public class Carte {
     @Id
     private String numCarte;
     private String mdp; //TODO Hash le mdp.
-    private Date dateExp;
+    private String dateExp;
     @ManyToOne
-    @JoinColumn(name = "compte_carte_iban")
     private Compte compteCarte;
+    @ManyToOne
+    private Client titulaire;
 
 }
