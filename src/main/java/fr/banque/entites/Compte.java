@@ -19,6 +19,7 @@ public class Compte {
     private double solde;
     private String intituleCompte;
     private String typeCompte;
+    private long numeroCompte;
     @ManyToMany
     @JoinTable(name="CLIENT_COMPTE",
             joinColumns=@JoinColumn(name="iban"),
