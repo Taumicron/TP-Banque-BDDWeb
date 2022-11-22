@@ -30,7 +30,10 @@ public class Client {
     @JsonFormat(pattern="dd-MM-yyyy")
     private Date dateCreation;
     @ManyToMany
-    @JoinColumn(name = "titulaires")
+    @JoinTable(name="CLIENT_COMPTE",
+            joinColumns=@JoinColumn(name="idClient"),
+            inverseJoinColumns=@JoinColumn(name="iban")
+    )
     private List<Compte> comptes;
     private int codeBanque;
     private int codeGuichet;

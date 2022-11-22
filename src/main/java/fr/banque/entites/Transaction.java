@@ -20,6 +20,6 @@ public abstract class Transaction {
     @ManyToOne
     @JoinColumn(name = "compte_iban")
     private Compte compte;
-    private int montant;
+    private double montant;
     private String intitule;
 }

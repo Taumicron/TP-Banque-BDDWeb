@@ -19,7 +19,8 @@ public class Carte {
     private String numCarte;
     private String mdp; //TODO Hash le mdp.
     private Date dateExp;
-    @OneToMany
-    @JoinColumn(name = "carte")
-    private List<TransactionCarte>  listeTransactionsCarte;
+    @ManyToOne
+    @JoinColumn(name = "compte_carte_iban")
+    private Compte compteCarte;
+
 }

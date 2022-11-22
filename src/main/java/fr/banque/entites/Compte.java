@@ -16,13 +16,17 @@ public class Compte {
     @Id
     //Generated Value, IBAN sous contraintes. (avec une interface ?)
     private String iban;
-    private int solde;
+    private double solde;
     private String intituleCompte;
     private String typeCompte;
     @ManyToMany
+    @JoinTable(name="CLIENT_COMPTE",
+            joinColumns=@JoinColumn(name="iban"),
+            inverseJoinColumns=@JoinColumn(name="idClient")
+    )
     private List<Client> titulaires;
     @OneToMany(mappedBy = "idTransaction")
     private List<Transaction> transactions;
-    @ManyToMany
+    @OneToMany(mappedBy = "compteCarte")
     private List<Carte> cartes;
 }
