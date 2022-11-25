@@ -31,8 +31,8 @@ public class ClientController {
         }
     }
 
-    @GetMapping("/{nom}/{prenom}")
-    public ResponseEntity getClient(@PathVariable("nom") String nom, @PathVariable("prenom") String prenom){
+    @GetMapping
+    public ResponseEntity getClient(@RequestParam("nom") String nom, @RequestParam("prenom") String prenom){
         List<GetClientResponse> toReturn = null;
         try {
             toReturn = this.serClient.getClient(nom, prenom);
