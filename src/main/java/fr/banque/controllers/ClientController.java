@@ -5,6 +5,7 @@ import fr.banque.controllers.dto.NotFoundException;
 import fr.banque.controllers.dto.client.CreateClientRequest;
 import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.controllers.dto.client.GetClientResponse;
+import fr.banque.controllers.dto.client.PutClientRequest;
 import fr.banque.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,5 +44,16 @@ public class ClientController {
             return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         }
         return ResponseEntity.ok(toReturn);
+    }
+
+    @PutMapping
+    public ResponseEntity modifClient(@RequestBody PutClientRequest request){
+        try {
+            return ResponseEntity.ok().body(this.serClient.modifClient(request));
+        } catch (BadRequestException e){
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        }
     }
 }
