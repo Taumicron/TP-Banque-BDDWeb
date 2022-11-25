@@ -13,9 +13,4 @@ public class TransactionCarteController {
     @Autowired
     private TransactionCarteService serTransactionCarte;
 
-    @PostMapping
-    public String getTransactionCompte(){
-        this.serTransactionCarte.saveTransactionCarte(TransactionCarte.builder().build());
-        return "Transaction Carte sauvegardée";
-    }
 }

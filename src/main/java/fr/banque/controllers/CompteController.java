@@ -2,17 +2,22 @@ package fr.banque.controllers;
 
 import fr.banque.controllers.dto.BadRequestException;
 import fr.banque.controllers.dto.ErreurRequestMsg;
+import fr.banque.controllers.dto.NotFoundException;
 import fr.banque.controllers.dto.carte.CreateCarteRequest;
 import fr.banque.controllers.dto.client.CreateClientRequest;
 import fr.banque.controllers.dto.client.CreateClientResponse;
 import fr.banque.controllers.dto.compte.CreateCompteRequest;
 import fr.banque.controllers.dto.compte.CreateCompteResponse;
+import fr.banque.controllers.dto.transactioncarte.CreateTransactionCarteRequest;
 import fr.banque.entites.Compte;
 import fr.banque.services.CompteService;
+import fr.banque.services.TransactionCarteService;
 import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.io.IOException;
 
@@ -22,6 +27,8 @@ public class CompteController {
     @Autowired
     private CompteService serCompte;
 
+    @Autowired
+    private TransactionCarteService serTraCarte;
     @PostMapping
     public ResponseEntity createCompte(@RequestBody CreateCompteRequest request){
         try {
@@ -39,6 +46,19 @@ public class CompteController {
             return ResponseEntity.created(null).body(this.serCompte.saveCarte(request, iban));
         } catch (BadRequestException e){
             return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (Exception e){
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        }
+    }
+
+    @PostMapping("/{iban}/cartes/{numeroCarte}/paiement")
+    public ResponseEntity createCarte(@RequestBody CreateTransactionCarteRequest request, @PathVariable("iban") String iban, @PathVariable("numeroCarte") String numeroCarte){
+        try {
+            return ResponseEntity.created(null).body(this.serTraCarte.saveTransactionCarte(request, iban, numeroCarte));
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         } catch (Exception e){
             return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         }

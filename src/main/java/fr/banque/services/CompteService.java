@@ -33,17 +33,27 @@ public class CompteService {
     @Autowired
     private CarteRepository repCarte;
 
-    private String generer_iban(Client c, long numCompte){
+    private String generer_numero_compte(){
+        String numC = "";
+        String nb = "0123456789";
+        Random r = new Random();
+        for(int i = 0; i < 11; i++){
+                numC+= nb.charAt(r.nextInt(nb.length()));
+        }
+        return numC;
+    }
+
+    private String generer_iban(Client c, String numCompte){
         String iban = "FR76";
         iban+= String.valueOf(c.getCodeBanque());
         iban+= String.valueOf(c.getCodeGuichet());
         iban+= String.valueOf(numCompte);
-        iban+= String.valueOf(97- ((89L *c.getCodeBanque() + 15L *c.getCodeGuichet() + 3* numCompte )%97));
+        iban+= String.valueOf(97- ((89L *c.getCodeBanque() + 15L *c.getCodeGuichet() + 3L* Long.valueOf(numCompte) )%97));
 
         return iban;
     }
     public CreateCompteResponse saveCompte(CreateCompteRequest request) throws BadRequestException {
-        long numCompte = new Random().nextLong((long)1E12);
+        String numCompte = generer_numero_compte();
 
         List<Client> titulaires = this.repClient.findAllById(request.getTitulairesCompte().stream().map(c -> c.getIdClient()).collect(Collectors.toList()));
         if (titulaires.size() == 0 || titulaires.size() > 2){

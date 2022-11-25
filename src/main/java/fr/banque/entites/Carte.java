@@ -17,7 +17,7 @@ import java.util.List;
 public class Carte {
     @Id
     private String numCarte;
-    private String mdp; //TODO Hash le mdp.
+    private String mdp; //MDP hash par algorithme MD5
     private String dateExp;
     @ManyToOne
     private Compte compteCarte;
