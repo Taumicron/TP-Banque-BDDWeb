@@ -1,12 +1,11 @@
 package fr.banque.entites;
 
-import com.fasterxml.jackson.annotation.JsonSubTypes;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Getter

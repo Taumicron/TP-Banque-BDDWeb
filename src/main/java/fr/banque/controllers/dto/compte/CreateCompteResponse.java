@@ -1,6 +1,5 @@
 package fr.banque.controllers.dto.compte;
 
-import fr.banque.entites.Client;
 import lombok.*;
 
 import java.util.List;

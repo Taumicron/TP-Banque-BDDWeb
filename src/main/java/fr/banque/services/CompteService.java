@@ -16,10 +16,7 @@ import org.springframework.stereotype.Service;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,13 +33,13 @@ public class CompteService {
     @Autowired
     private VirementRepository repVirement;
     private String generer_numero_compte(){
-        String numC = "";
+        StringBuilder numC = new StringBuilder();
         String nb = "0123456789";
         Random r = new Random();
         for(int i = 0; i < 11; i++){
-                numC+= nb.charAt(r.nextInt(nb.length()));
+                numC.append(nb.charAt(r.nextInt(nb.length())));
         }
-        return numC;
+        return numC.toString();
     }
 
     private String generer_iban(Client c, String numCompte){
@@ -50,7 +47,7 @@ public class CompteService {
         iban+= String.valueOf(c.getCodeBanque());
         iban+= String.valueOf(c.getCodeGuichet());
         iban+= String.valueOf(numCompte);
-        iban+= String.valueOf(97- ((89L *c.getCodeBanque() + 15L *c.getCodeGuichet() + 3L* Long.valueOf(numCompte) )%97));
+        iban+= String.valueOf(97- ((89L *c.getCodeBanque() + 15L *c.getCodeGuichet() + 3L* Long.parseLong(numCompte) )%97));
 
         return iban;
     }
@@ -59,16 +56,22 @@ public class CompteService {
             throw new BadRequestException("Mauvais format de requête.");
         }
 
+        if (request.getTitulairesCompte().size() == 2 && Objects.equals(request.getTitulairesCompte().get(0).getIdClient(), request.getTitulairesCompte().get(1).getIdClient())){
+            throw new BadRequestException("Titulaire duppliqué.");
+        }
+
+        if (request.getTitulairesCompte().size() == 0 || request.getTitulairesCompte().size() > 2){
+            throw new BadRequestException("Le compte doit avoir 1 ou 2 titulaires.");
+        }
+
+        List<Client> titulaires = this.repClient.findAllById(request.getTitulairesCompte().stream().map(CreateCompteRequest.ClientCompteRequest::getIdClient).collect(Collectors.toList()));
+
         String numCompte = generer_numero_compte();
 
-        List<Client> titulaires = this.repClient.findAllById(request.getTitulairesCompte().stream().map(c -> c.getIdClient()).collect(Collectors.toList()));
         if (titulaires.size() != request.getTitulairesCompte().size()){
             throw new BadRequestException("Client(s) non trouvé(s).");
         }
 
-        if (titulaires.size() == 0 || titulaires.size() > 2){
-            throw new BadRequestException("Le compte doit avoir 1 ou 2 titulaires.");
-        }
 
         Compte toSave = Compte.builder()
                         .intituleCompte(request.getIntituleCompte())
@@ -100,21 +103,21 @@ public class CompteService {
         md.update(code.getBytes());
         byte[] bytes = md.digest();
         StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < bytes.length; i++) {
-            sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
+        for (byte aByte : bytes) {
+            sb.append(Integer.toString((aByte & 0xff) + 0x100, 16).substring(1));
         }
         return sb.toString();
 
     }
 
     private String generer_num_carte(){
-        String num = "";
+        StringBuilder num = new StringBuilder();
         String temp = "0123456789";
         Random r = new Random();
         for(int i = 0; i < 16;i++){
-            num+=temp.charAt(r.nextInt(temp.length()));
+            num.append(temp.charAt(r.nextInt(temp.length())));
         }
-        return num;
+        return num.toString();
     }
 
 
@@ -129,10 +132,12 @@ public class CompteService {
 
         Optional<Client> titu = repClient.findById(c.getTitulaireCarte());
         Optional<Compte> compteTitu = repCompte.findById(iban);
-        if (titu.isEmpty()){
+        if (titu.isEmpty()) {
             throw new BadRequestException("Le titulaire de la carte n'a pas été trouvé.");
-        } else if (compteTitu.isEmpty()){
+        } else if (compteTitu.isEmpty()) {
             throw new BadRequestException("Le compte avec l'iban spécifié n'a pas été trouvé.");
+        } else if (!compteTitu.get().getTitulaires().stream().map(Client::getIdClient).toList().contains(titu.get().getIdClient())) {
+            throw new BadRequestException("Le compte n'appartient pas au futur titulaire de la carte.");
         } else if (compteTitu.get().getCartes().size() > 1){
             throw new BadRequestException("Ce compte ne peut pas avoir de carte supplémentaire.");
         }

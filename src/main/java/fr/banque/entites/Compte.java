@@ -3,7 +3,6 @@ package fr.banque.entites;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -26,10 +25,13 @@ public class Compte {
             joinColumns=@JoinColumn(name="iban"),
             inverseJoinColumns=@JoinColumn(name="idClient")
     )
+    @ToString.Exclude
     private List<Client> titulaires;
     @OneToMany(mappedBy = "idTransaction")
+    @ToString.Exclude
     private List<Transaction> transactions;
     @OneToMany(mappedBy = "compteCarte")
+    @ToString.Exclude
     private List<Carte> cartes;
 
 }

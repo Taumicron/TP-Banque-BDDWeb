@@ -30,6 +30,8 @@ public class VirementService {
             throw new BadRequestException("L'iban du bénéficiare n'est pas au bon format.");
         } else if (!request.getIbanCompteEmetteur().matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
             throw new BadRequestException("L'iban de l'émetteur n'est pas au bon format.");
+        } else if (request.getMontant() <= 0){
+            throw new BadRequestException("Le montant d'un virement doit être supérieur à 0.");
         }
 
         Optional<Compte> emetteurOpt = repCompte.findById(request.getIbanCompteEmetteur());
@@ -72,11 +74,11 @@ public class VirementService {
     }
 
     public CreateVirementResponse buildCreateVirementResponse(Virement v){
-        List<CreateVirementResponse.CreateVirementTransactionResponse> transactions = new ArrayList<CreateVirementResponse.CreateVirementTransactionResponse>();
+        List<CreateVirementResponse.CreateVirementTransactionResponse> transactions = new ArrayList<>();
         CreateVirementResponse.CreateVirementTransactionResponse transaction = CreateVirementResponse.CreateVirementTransactionResponse.builder()
                 .id(v.getCompteCible().getIban())
                 .montant(v.getMontant().toString())
-                .typeTransaction(v.getMontant() > 0 ? "CREDIT" : "DEBIT")
+                .typeTransaction("DEBIT")
                 .typeSource("VIREMENT")
                 .idSource(String.valueOf(v.getCompte().getIban()))
                 .build();

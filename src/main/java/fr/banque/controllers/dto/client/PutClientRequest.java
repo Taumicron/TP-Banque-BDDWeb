@@ -2,8 +2,6 @@ package fr.banque.controllers.dto.client;
 
 import lombok.*;
 
-// Identique à CreateClientRequest
-
 @Builder
 @Getter
 @Setter

@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.*;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -33,13 +31,14 @@ public class Client {
             joinColumns=@JoinColumn(name="idClient"),
             inverseJoinColumns=@JoinColumn(name="iban")
     )
+    @ToString.Exclude
     private List<Compte> comptes;
     @OneToMany(mappedBy = "titulaire")
+    @ToString.Exclude
     private List<Carte> cartes;
     @Builder.Default
     private int codeBanque = 12345;
     @Builder.Default
     private int codeGuichet = 56789;
-
 
 }
