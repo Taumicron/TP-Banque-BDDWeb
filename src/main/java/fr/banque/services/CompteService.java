@@ -6,6 +6,7 @@ import fr.banque.controllers.dto.carte.CreateCarteRequest;
 import fr.banque.controllers.dto.carte.CreateCarteResponse;
 import fr.banque.controllers.dto.compte.CreateCompteRequest;
 import fr.banque.controllers.dto.compte.CreateCompteResponse;
+import fr.banque.controllers.dto.compte.GetCartesCompteResponse;
 import fr.banque.controllers.dto.compte.GetComptesResponse;
 import fr.banque.entites.*;
 import fr.banque.repositories.*;
@@ -144,7 +145,7 @@ public class CompteService {
         List<GetComptesResponse> toReturn = new ArrayList<GetComptesResponse>();
 
         for (Compte c : comptes) {
-            List<GetComptesResponse.GetComptesTitulaireResponse> titulairesId = new ArrayList<GetComptesResponse.GetComptesTitulaireResponse>();
+            List<GetComptesResponse.GetComptesTitulaireResponse> titulairesId = new ArrayList<>();
             for(Client titulaire: c.getTitulaires())
                 titulairesId.add(GetComptesResponse.GetComptesTitulaireResponse.builder().idClient(titulaire.getIdClient().toString()).build());
 
@@ -181,6 +182,28 @@ public class CompteService {
     }
 
         return toReturn;
+    }
+
+    public List<GetCartesCompteResponse> getCartesCompte(String iban) throws NotFoundException, BadRequestException, Exception {
+        if (this.repCompte.findById(iban).isEmpty()){
+            throw new BadRequestException();
+        }
+        List<Carte> listCartes = this.repCarte.findAllByCompteCarte_Iban(iban);
+        if (listCartes.isEmpty()){
+            throw new NotFoundException();
+        }
+        List<GetCartesCompteResponse> toReturn = new ArrayList<>();
+        for (Carte c :listCartes) {
+            List<GetCartesCompteResponse.GetCartesCompteTitulaire> titulaire = new ArrayList<>();
+            titulaire.add(GetCartesCompteResponse.GetCartesCompteTitulaire.builder().idClient(c.getTitulaire().getIdClient().toString()).build());
+            toReturn.add(GetCartesCompteResponse.builder()
+                            .numeroCarte(c.getNumCarte())
+                            .dateExpiration(c.getDateExp())
+                            .titulaireCarte(titulaire)
+                    .build());
+        }
+
+        return toReturn ;
     }
 }
 

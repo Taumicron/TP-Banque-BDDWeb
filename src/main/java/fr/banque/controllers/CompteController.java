@@ -68,4 +68,17 @@ public class CompteController {
             return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
         }
     }
+
+    @GetMapping("/{iban}/cartes")
+    public ResponseEntity getCartesCompte(@PathVariable("iban") String iban){
+        try {
+            return ResponseEntity.ok().body(this.serCompte.getCartesCompte(iban));
+        } catch (BadRequestException e) {
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+        }
+    }
 }
