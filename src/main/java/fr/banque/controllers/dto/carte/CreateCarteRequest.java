@@ -8,6 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class CreateCarteRequest {
-    private int titulaireCarte;
+    private Integer titulaireCarte;
     private String code;
 }

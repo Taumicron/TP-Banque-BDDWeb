@@ -20,6 +20,24 @@ public class ClientService {
 
 
     public CreateClientResponse saveClient(CreateClientRequest c) throws BadRequestException {
+        if (c.getPrenom() == null){
+            throw new BadRequestException("Aucun prénom renseigné.");
+        } else if (c.getNom() == null){
+            throw new BadRequestException("Aucun nom renseigné.");
+        } else if (c.getDateNaissance() == null){
+            throw new BadRequestException("Aucune date de naissance renseignée.");
+        } else if (c.getTelephone() == null){
+            throw new BadRequestException("Aucun numéro de téléphone renseigné.");
+        } else if (c.getAdressePostale() == null){
+            throw new BadRequestException("Aucune adresse postale renseignée.");
+        } else if (c.getPrenom().matches(".*\\d.*")){
+            throw new BadRequestException("Le prénom n'est pas au bon format.");
+        } else if (c.getNom().matches(".*\\d.*")){
+            throw new BadRequestException("Le nom n'est pas au bon format.");
+        } else if (!c.getTelephone().matches("(0|\\+33|0033)[1-9][0-9]{8}")){
+            throw new BadRequestException("Le numéro de téléphone n'est pas au bon format.");
+        }
+
         Client toCreate = this.repClient.save(Client.builder().prenom(c.getPrenom())
                 .nom(c.getNom())
                 .dateNaissance(c.getDateNaissance())
@@ -45,16 +63,14 @@ public class ClientService {
     }
 
     public List<GetClientResponse> getClient(String nom, String prenom) throws BadRequestException, NotFoundException {
-        for(char c : nom.toCharArray())
-            if (Character.isDigit(c))
-                throw new BadRequestException();
+        if (nom.matches(".*\\d.*"))
+            throw new BadRequestException("Le nom ne peut pas contenir de chiffres.");
 
-        for(char c : prenom.toCharArray())
-            if (Character.isDigit(c))
-                throw new BadRequestException();
+        if (prenom.matches(".*\\d.*"))
+            throw new BadRequestException("Le prénom ne peut pas contenir de chiffres.");
         List<Client> listClients = this.repClient.findAllByNomAndPrenom(nom, prenom);
         if (listClients.isEmpty()){
-            throw new NotFoundException();
+            throw new NotFoundException("Aucun client trouvé avec les paramètres fournis.");
         }
         List<GetClientResponse> toReturn = new ArrayList<GetClientResponse>();
         for (Client c: listClients) {
@@ -73,9 +89,29 @@ public class ClientService {
     }
 
     public PutClientResponse modifClient(PutClientRequest request) throws BadRequestException {
+        if (request.getId() == null){
+            throw new BadRequestException("Aucun id renseigné.");
+        } else if (request.getPrenom() == null){
+            throw new BadRequestException("Aucun prénom renseigné.");
+        } else if (request.getNom() == null){
+            throw new BadRequestException("Aucun nom renseigné.");
+        } else if (request.getDateNaissance() == null){
+            throw new BadRequestException("Aucune date de naissance renseignée.");
+        } else if (request.getTelephone() == null){
+            throw new BadRequestException("Aucun numéro de téléphone renseigné.");
+        } else if (request.getAdressePostale() == null){
+            throw new BadRequestException("Aucune adresse postale renseignée.");
+        } else if (request.getPrenom().matches(".*\\d.*")){
+            throw new BadRequestException("Le prénom n'est pas au bon format.");
+        } else if (request.getNom().matches(".*\\d.*")){
+            throw new BadRequestException("Le nom n'est pas au bon format.");
+        } else if (!request.getTelephone().matches("(0|\\+33|0033)[1-9][0-9]{8}")){
+            throw new BadRequestException("Le numéro de téléphone n'est pas au bon format.");
+        }
+
         Optional<Client> clientOpt = this.repClient.findById(request.getId());
         if (clientOpt.isEmpty()){
-            throw new BadRequestException();
+            throw new BadRequestException("Aucun client trouvé avec cet id.");
         }
 
         Client c = clientOpt.get();

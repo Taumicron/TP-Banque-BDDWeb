@@ -25,9 +25,9 @@ public class ClientController {
         try {
             return ResponseEntity.created(null).body(this.serClient.saveClient(request));
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg(e.getMessage()));
         }
     }
 
@@ -37,11 +37,12 @@ public class ClientController {
         try {
             toReturn = this.serClient.getClient(nom, prenom);
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
         return ResponseEntity.ok(toReturn);
     }
@@ -51,9 +52,9 @@ public class ClientController {
         try {
             return ResponseEntity.ok().body(this.serClient.modifClient(request));
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
         }
     }
 }

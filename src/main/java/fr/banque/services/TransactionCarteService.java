@@ -25,13 +25,20 @@ public class TransactionCarteService {
     private CarteRepository repCarte;
 
     public CreateTransactionCarteResponse saveTransactionCarte(CreateTransactionCarteRequest request, String iban, String numeroCarte) throws NotFoundException, BadRequestException {
-        if (iban.length() != 27 || numeroCarte.length() != 16){
-            throw new BadRequestException();
+        if (!iban.matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
+            throw new BadRequestException("L'IBAN n'est pas au bon format");
+        } else if (!numeroCarte.matches("^\\d{16}")) {
+            throw new BadRequestException("Le numéro de carte n'est pas au bon format.");
+        } else if (request.getMontant() == null || request.getDateCreation() == null){
+            throw new BadRequestException("Mauvais format de requête.");
         }
+
         Optional<Compte> compteOpt = this.repCompte.findById(iban);
         Optional<Carte> carteOpt = this.repCarte.findById(numeroCarte);
-        if (compteOpt.isEmpty() || carteOpt.isEmpty()){
-            throw new NotFoundException();
+        if (compteOpt.isEmpty()){
+            throw new NotFoundException("Aucun compte trouvé avec cet iban.");
+        } else if (carteOpt.isEmpty()){
+            throw new NotFoundException(("Aucune carte trouvée avec ce numéro de carte."));
         }
 
 
@@ -39,7 +46,7 @@ public class TransactionCarteService {
         Carte carte = carteOpt.get();
 
         if (request.getMontant() > 0 && compte.getSolde() < request.getMontant()){
-            throw new BadRequestException();
+            throw new BadRequestException("Le solde du compte ne permet pas d'effectuer cette transaction.");
         }
 
         TransactionCarte toSaveTraCarte = TransactionCarte.builder()

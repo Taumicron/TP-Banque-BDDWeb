@@ -22,9 +22,10 @@ public class VirementController {
         try {
             return ResponseEntity.created(null).body(this.serVirement.saveVirement(request));
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
     }
 }

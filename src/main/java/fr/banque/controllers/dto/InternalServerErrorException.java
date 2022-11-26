@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class NotFoundException extends Exception {
+public class InternalServerErrorException extends Exception{
     private String message;
-    public NotFoundException(String s){
+    public InternalServerErrorException(String s){
         super();
         this.message = s;
     }

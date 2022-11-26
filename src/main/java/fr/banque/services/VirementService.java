@@ -23,11 +23,25 @@ public class VirementService {
     private CompteRepository repCompte;
 
     public CreateVirementResponse saveVirement(CreateVirementRequest request) throws BadRequestException {
+        if (request.getIbanCompteEmetteur() == null || request.getIbanCompteBeneficiaire() == null || request.getMontant() == null || request.getLibelleVirement() == null){
+            throw new BadRequestException("Mauvais format de requête.");
+        }
+        else if (!request.getIbanCompteBeneficiaire().matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
+            throw new BadRequestException("L'iban du bénéficiare n'est pas au bon format.");
+        } else if (!request.getIbanCompteEmetteur().matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
+            throw new BadRequestException("L'iban de l'émetteur n'est pas au bon format.");
+        }
+
         Optional<Compte> emetteurOpt = repCompte.findById(request.getIbanCompteEmetteur());
         Optional<Compte> beneficiaireOpt = repCompte.findById(request.getIbanCompteBeneficiaire());
 
-        if (emetteurOpt.isEmpty() || beneficiaireOpt.isEmpty() || emetteurOpt.get().getSolde()-request.getMontant() < 0){
-            throw new BadRequestException();
+
+        if (emetteurOpt.isEmpty()){
+            throw new BadRequestException("L'émetteur est introuvable.");
+        } else if (beneficiaireOpt.isEmpty()){
+            throw new BadRequestException("Le bénéficiaire est introuvable.");
+        } else if (emetteurOpt.get().getSolde()-request.getMontant() < 0){
+            throw new BadRequestException("Le solde de l'émetteur ne lui permet pas d'effectuer ce virement.");
         }
 
         Compte emetteur = emetteurOpt.get();

@@ -26,9 +26,10 @@ public class CompteController {
         try {
             return ResponseEntity.created(null).body(this.serCompte.saveCompte(request));
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
     }
 
@@ -37,9 +38,9 @@ public class CompteController {
         try {
             return ResponseEntity.created(null).body(this.serCompte.saveCarte(request, iban));
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
         }
     }
 
@@ -48,24 +49,26 @@ public class CompteController {
         try {
             return ResponseEntity.created(null).body(this.serTraCarte.saveTransactionCarte(request, iban, numeroCarte));
         } catch (BadRequestException e) {
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
     }
 
     @GetMapping
-    public ResponseEntity getComptesClient(@RequestParam("identifiantClient") Integer id) throws NotFoundException {
+    public ResponseEntity getComptesClient(@RequestParam("identifiantClient") String id) throws NotFoundException {
         try {
             return ResponseEntity.ok().body(this.serCompte.getComptesClient(id));
         } catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         } catch (BadRequestException e){
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
     }
 
@@ -74,11 +77,12 @@ public class CompteController {
         try {
             return ResponseEntity.ok().body(this.serCompte.getCartesCompte(iban));
         } catch (BadRequestException e) {
-            return ResponseEntity.badRequest().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.badRequest().body(new ErreurRequestMsg(e.getMessage()));
         } catch (NotFoundException e){
-            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErreurRequestMsg(e.getMessage()));
         } catch (Exception e){
-            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Le message d'erreur fonctionnelle sera dans ce champ"));
+            return ResponseEntity.internalServerError().body(new ErreurRequestMsg("Erreur interne du serveur."));
+
         }
     }
 }

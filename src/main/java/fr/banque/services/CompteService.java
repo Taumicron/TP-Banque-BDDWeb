@@ -55,11 +55,19 @@ public class CompteService {
         return iban;
     }
     public CreateCompteResponse saveCompte(CreateCompteRequest request) throws BadRequestException {
+        if (request.getIntituleCompte() == null || request.getTypeCompte() == null || request.getTitulairesCompte() == null){
+            throw new BadRequestException("Mauvais format de requête.");
+        }
+
         String numCompte = generer_numero_compte();
 
         List<Client> titulaires = this.repClient.findAllById(request.getTitulairesCompte().stream().map(c -> c.getIdClient()).collect(Collectors.toList()));
+        if (titulaires.size() != request.getTitulairesCompte().size()){
+            throw new BadRequestException("Client(s) non trouvé(s).");
+        }
+
         if (titulaires.size() == 0 || titulaires.size() > 2){
-            throw new BadRequestException();
+            throw new BadRequestException("Le compte doit avoir 1 ou 2 titulaires.");
         }
 
         Compte toSave = Compte.builder()
@@ -111,10 +119,22 @@ public class CompteService {
 
 
     public CreateCarteResponse saveCarte(CreateCarteRequest c, String iban) throws BadRequestException, NoSuchAlgorithmException {
+        if (!iban.matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
+            throw new BadRequestException("Le format de l'iban n'est pas correct.");
+        } else if (c.getTitulaireCarte() == null){
+            throw new BadRequestException("Titulaire de carte non fourni.");
+        } else if (c.getCode() == null){
+            throw new BadRequestException("Code non fourni.");
+        }
+
         Optional<Client> titu = repClient.findById(c.getTitulaireCarte());
         Optional<Compte> compteTitu = repCompte.findById(iban);
-        if (titu.isEmpty() || compteTitu.isEmpty() || compteTitu.get().getCartes().size() > 1){
-            throw new BadRequestException();
+        if (titu.isEmpty()){
+            throw new BadRequestException("Le titulaire de la carte n'a pas été trouvé.");
+        } else if (compteTitu.isEmpty()){
+            throw new BadRequestException("Le compte avec l'iban spécifié n'a pas été trouvé.");
+        } else if (compteTitu.get().getCartes().size() > 1){
+            throw new BadRequestException("Ce compte ne peut pas avoir de carte supplémentaire.");
         }
 
         Carte toCreate = Carte.builder().titulaire(titu.get())
@@ -134,13 +154,19 @@ public class CompteService {
                 .build();
     }
 
-    public List<GetComptesResponse> getComptesClient(Integer id) throws NotFoundException, BadRequestException {
-        if (id < 0){
-            throw new BadRequestException();
+    public List<GetComptesResponse> getComptesClient(String str) throws NotFoundException, BadRequestException {
+        Integer id = null;
+        try {
+            id = Integer.valueOf(str);
+        } catch(Exception e){
+            throw new BadRequestException("L'id n'est pas sous format numérique.");
+        }
+        if (this.repClient.findById(id).isEmpty()){
+            throw new BadRequestException("Aucun client trouvé avec cet Id.");
         }
         List<Compte> comptes = this.repCompte.findAllByTitulaires_IdClient(id);
         if (comptes.isEmpty()) {
-            throw new NotFoundException();
+            throw new NotFoundException("Ce client n'a pas de compte.");
         }
         List<GetComptesResponse> toReturn = new ArrayList<GetComptesResponse>();
 
@@ -166,7 +192,7 @@ public class CompteService {
                         .montant(Double.valueOf(Math.abs(v.getMontant())).toString())
                         .typeTransaction(v.getMontant() > 0 ? "DEBIT" : "CREDIT")
                         .typeSource("VIREMENT")
-                        .idSource(v.getCompte().getIban())
+                        .idSource(v.getMontant() > 0 ? v.getCompte().getIban() : v.getCompteCible().getIban())
                         .build());
             }
 
@@ -185,12 +211,15 @@ public class CompteService {
     }
 
     public List<GetCartesCompteResponse> getCartesCompte(String iban) throws NotFoundException, BadRequestException, Exception {
+        if (!iban.matches("^FR\\d{12}[0-9A-Z]{11}\\d{2}")){
+            throw new BadRequestException("Le format de l'iban n'est pas correct.");
+        }
         if (this.repCompte.findById(iban).isEmpty()){
-            throw new BadRequestException();
+            throw new BadRequestException("Aucun compte avec cet iban.");
         }
         List<Carte> listCartes = this.repCarte.findAllByCompteCarte_Iban(iban);
         if (listCartes.isEmpty()){
-            throw new NotFoundException();
+            throw new NotFoundException("Ce compte n'a pas de carte.");
         }
         List<GetCartesCompteResponse> toReturn = new ArrayList<>();
         for (Carte c :listCartes) {
