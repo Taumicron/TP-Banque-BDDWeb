@@ -3,6 +3,7 @@ package fr.banque.entites;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -16,7 +17,7 @@ public class Compte {
     @Id
     //Generated Value, IBAN sous contraintes. (avec une interface ?)
     private String iban;
-    private double solde;
+    private Double solde;
     private String intituleCompte;
     private String typeCompte;
     private String numeroCompte;
@@ -30,4 +31,5 @@ public class Compte {
     private List<Transaction> transactions;
     @OneToMany(mappedBy = "compteCarte")
     private List<Carte> cartes;
+
 }

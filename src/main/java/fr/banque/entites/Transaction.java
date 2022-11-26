@@ -14,6 +14,7 @@ import java.util.Date;
 @SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Transaction {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

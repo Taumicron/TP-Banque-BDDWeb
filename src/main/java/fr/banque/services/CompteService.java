@@ -1,16 +1,14 @@
 package fr.banque.services;
 
 import fr.banque.controllers.dto.BadRequestException;
+import fr.banque.controllers.dto.NotFoundException;
 import fr.banque.controllers.dto.carte.CreateCarteRequest;
 import fr.banque.controllers.dto.carte.CreateCarteResponse;
 import fr.banque.controllers.dto.compte.CreateCompteRequest;
 import fr.banque.controllers.dto.compte.CreateCompteResponse;
-import fr.banque.entites.Carte;
-import fr.banque.entites.Client;
-import fr.banque.entites.Compte;
-import fr.banque.repositories.CarteRepository;
-import fr.banque.repositories.ClientRepository;
-import fr.banque.repositories.CompteRepository;
+import fr.banque.controllers.dto.compte.GetComptesResponse;
+import fr.banque.entites.*;
+import fr.banque.repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +30,10 @@ public class CompteService {
     private ClientRepository repClient;
     @Autowired
     private CarteRepository repCarte;
-
+    @Autowired
+    private TransactionCarteRepository repTranCarte;
+    @Autowired
+    private VirementRepository repVirement;
     private String generer_numero_compte(){
         String numC = "";
         String nb = "0123456789";
@@ -63,6 +64,7 @@ public class CompteService {
         Compte toSave = Compte.builder()
                         .intituleCompte(request.getIntituleCompte())
                         .typeCompte(request.getTypeCompte())
+                        .solde(0.0)
                         .titulaires(titulaires)
                         .numeroCompte(numCompte)
                         .iban(generer_iban(titulaires.get(0), numCompte))
@@ -131,5 +133,54 @@ public class CompteService {
                 .build();
     }
 
+    public List<GetComptesResponse> getComptesClient(Integer id) throws NotFoundException, BadRequestException {
+        if (id < 0){
+            throw new BadRequestException();
+        }
+        List<Compte> comptes = this.repCompte.findAllByTitulaires_IdClient(id);
+        if (comptes.isEmpty()) {
+            throw new NotFoundException();
+        }
+        List<GetComptesResponse> toReturn = new ArrayList<GetComptesResponse>();
+
+        for (Compte c : comptes) {
+            List<GetComptesResponse.GetComptesTitulaireResponse> titulairesId = new ArrayList<GetComptesResponse.GetComptesTitulaireResponse>();
+            for(Client titulaire: c.getTitulaires())
+                titulairesId.add(GetComptesResponse.GetComptesTitulaireResponse.builder().idClient(titulaire.getIdClient().toString()).build());
+
+            List<GetComptesResponse.GetComptesTransactionResponse> transactionsId = new ArrayList<GetComptesResponse.GetComptesTransactionResponse>();
+
+            for (TransactionCarte t : this.repTranCarte.findAllByCompte_Iban(c.getIban())) {
+                transactionsId.add(GetComptesResponse.GetComptesTransactionResponse.builder()
+                        .id(t.getIdTransaction().toString())
+                        .montant(Double.valueOf(Math.abs(t.getMontant())).toString())
+                        .typeTransaction(t.getMontant() > 0 ? "DEBIT" : "CREDIT")
+                        .typeSource("CB")
+                        .idSource(t.getCompte().getIban())
+                        .build());
+            }
+            for (Virement v : this.repVirement.findAllByCompte_Iban(c.getIban())) {
+                transactionsId.add(GetComptesResponse.GetComptesTransactionResponse.builder()
+                        .id(v.getIdTransaction().toString())
+                        .montant(Double.valueOf(Math.abs(v.getMontant())).toString())
+                        .typeTransaction(v.getMontant() > 0 ? "DEBIT" : "CREDIT")
+                        .typeSource("VIREMENT")
+                        .idSource(v.getCompte().getIban())
+                        .build());
+            }
+
+
+        toReturn.add(GetComptesResponse.builder()
+                .iban(c.getIban())
+                .solde(c.getSolde().toString())
+                .intituleCompte(c.getIntituleCompte())
+                .typeCompte(c.getTypeCompte())
+                .titulairesCompte(titulairesId)
+                .transactions(transactionsId)
+                .build());
+    }
+
+        return toReturn;
+    }
 }
 
