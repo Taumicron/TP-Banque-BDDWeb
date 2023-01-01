@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "ddc73db8-9987-4af0-a2de-e657fa559a79",
+		"_postman_id": "088fdbb9-f9fe-4f2c-83e5-1ce253a8721a",
 		"name": "TP BDD Web",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -15,7 +15,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0033646214525\",\r\n  \"adressePostale\": \"2022-11-28T18:46:19UTC\"\r\n}\r\n",
+							"raw": "{\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"+3364621452\",\r\n  \"adressePostale\": \"2022-11-28T18:46:19UTC\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -43,7 +43,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"prenom\": \"Aurelien\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0033646214525\",\r\n  \"adressePostale\": \"2022-11-28T18:46:19UTC\"\r\n}\r\n",
+							"raw": "{\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0033646214525\",\r\n  \"adressePostale\": \"2022-11-28T18:46:19UTC\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -132,7 +132,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"intituleCompte\": \"Compte courant Mr Pietrzak\",\r\n  \"typeCompte\": \"COMPTE_COURANT_SIMPLE\",\r\n  \"titulairesCompte\": [\r\n    {\r\n        \"idClient\":\"1\"\r\n    }\r\n  ]\r\n}",
+							"raw": "{\r\n  \"intituleCompte\": \"Compte courant Mr Pietrzak\",\r\n  \"typeCompte\": \"COMPTE_COURANT_SIMPLE\",\r\n  \"titulairesCompte\": [\r\n    {\r\n        \"idClient\":\"1\"\r\n    },\r\n    {\r\n        \"idClient\":\"6\"\r\n    },\r\n    {\r\n        \"idClient\":\"3\"\r\n    }\r\n  ]\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -221,7 +221,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"titulaireCarte\": \"500\",\r\n  \"code\": 1234\r\n}",
+							"raw": "{\r\n  \"titulaireCarte\": \"1\",\r\n  \"code\": 1234\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -229,7 +229,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/comptes/FR7612345567899273098093385/cartes",
+							"raw": "http://localhost:8080/comptes/FR7612345567894168107703697/cartes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -237,7 +237,7 @@
 							"port": "8080",
 							"path": [
 								"comptes",
-								"FR7612345567899273098093385",
+								"FR7612345567894168107703697",
 								"cartes"
 							]
 						}
@@ -294,7 +294,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/comptes/FR7612345567896551607833342/cartes/4722451135155720/paiement",
+							"raw": "http://localhost:8080/comptes/FR7612345567894168107703697/cartes/0858806365426308/paiement",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -302,9 +302,9 @@
 							"port": "8080",
 							"path": [
 								"comptes",
-								"FR7612345567896551607833342",
+								"FR7612345567894168107703697",
 								"cartes",
-								"4722451135155720",
+								"0858806365426308",
 								"paiement"
 							]
 						}
@@ -318,7 +318,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"montant\": -100,\r\n  \"dateCreation\": \"2022-11-28T18:46:19UTC\"\r\n}",
+							"raw": "{\r\n  \"montant\": -100\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -326,7 +326,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/comptes/FR7612345567898142785905295/cartes/6267238104796314/paiement",
+							"raw": "http://localhost:8080/comptes/FR7612345567894168107703697/cartes/0858806365426308/paiement",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -334,9 +334,9 @@
 							"port": "8080",
 							"path": [
 								"comptes",
-								"FR7612345567898142785905295",
+								"FR7612345567894168107703697",
 								"cartes",
-								"6267238104796314",
+								"0858806365426308",
 								"paiement"
 							]
 						}
@@ -355,7 +355,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ibanCompteEmetteur\": \"FR7612345567897094035804425\",\r\n  \"ibanCompteBeneficiaire\": \"FR7612345567897094035804425\",\r\n  \"montant\": 50,\r\n  \"libelleVirement\": \"Virement vers mon compte courant\"\r\n}",
+							"raw": "{\r\n  \"ibanCompteEmetteur\": \"FR7612345567899933963700012\",\r\n  \"ibanCompteBeneficiaire\": \"FR7612345567892570972822556\",\r\n  \"montant\": 100,\r\n  \"libelleVirement\": \"Virement vers mon compte courant\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -383,7 +383,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ibanCompteEmetteur\": \"FR7612345567897094035804425\",\r\n  \"ibanCompteBeneficiaire\": \"FR7612345567897094035804425\",\r\n  \"montant\": 50,\r\n  \"libelleVirement\": \"Virement vers mon compte courant\"\r\n}",
+							"raw": "{\r\n  \"ibanCompteEmetteur\": \"abcdef\",\r\n  \"ibanCompteBeneficiaire\": \"ghijkl\",\r\n  \"montant\": 50,\r\n  \"libelleVirement\": \"Virement vers mon compte courant\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -411,7 +411,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"ibanCompteEmetteur\": \"FR7612345567897094035804425\",\r\n  \"ibanCompteBeneficiaire\": \"FR7612345567897094035804425\",\r\n  \"montant\": 50,\r\n  \"libelleVirement\": \"Virement vers mon compte courant\"\r\n}",
+							"raw": "{\r\n  \"ibanCompteEmetteur\": \"FR7612345567897094035804425\",\r\n  \"ibanCompteBeneficiaire\": \"FR7612345567897094035804425\",\r\n  \"montant\": 50\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -480,23 +480,11 @@
 				},
 				{
 					"name": "Get Clients Erreur 400 Mauvais format nom/prenom",
-					"protocolProfileBehavior": {
-						"disableBodyPruning": true
-					},
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "http://localhost:8080/clients?nom=Pietrzak&prenom=Aurelien",
+							"raw": "http://localhost:8080/clients?nom=Pietrzak&prenom=Aureli1",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -512,7 +500,12 @@
 								},
 								{
 									"key": "prenom",
-									"value": "Aurelien"
+									"value": "Aureli1"
+								},
+								{
+									"key": "",
+									"value": null,
+									"disabled": true
 								}
 							]
 						}
@@ -531,7 +524,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 2,\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0646214511\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0646214511\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -559,7 +552,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 2,\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0646214511\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"prenom\": \"Aureli1\",\r\n  \"nom\": \"P1etrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0646214511111111111\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -587,7 +580,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n  \"id\": 2,\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"telephone\": \"0646214511\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
+							"raw": "{\r\n  \"id\": 1,\r\n  \"prenom\": \"Aurelien\",\r\n  \"nom\": \"Pietrzak\",\r\n  \"dateNaissance\": \"2022-11-28T18:46:19UTC\",\r\n  \"adressePostale\": \"75 rue de Paris\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -631,7 +624,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/comptes?identifiantClient=1",
+							"raw": "http://localhost:8080/comptes?identifiantClient=2",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -643,7 +636,7 @@
 							"query": [
 								{
 									"key": "identifiantClient",
-									"value": "1"
+									"value": "2"
 								}
 							]
 						}
@@ -668,7 +661,7 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8080/comptes?identifiantClient=1",
+							"raw": "http://localhost:8080/comptes?identifiantClient=abcc",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -680,7 +673,7 @@
 							"query": [
 								{
 									"key": "identifiantClient",
-									"value": "1"
+									"value": "abcc"
 								}
 							]
 						}
@@ -698,7 +691,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/comptes/FR7612345567894430452591384/cartes",
+							"raw": "http://localhost:8080/comptes/FR7612345567892031281499669/cartes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -706,7 +699,7 @@
 							"port": "8080",
 							"path": [
 								"comptes",
-								"FR7612345567894430452591384",
+								"FR7612345567892031281499669",
 								"cartes"
 							]
 						}
@@ -719,7 +712,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8080/comptes/FR7612345567894430452591384/cartes",
+							"raw": "http://localhost:8080/comptes/FR7612345567894170763038442/cartes",
 							"protocol": "http",
 							"host": [
 								"localhost"
@@ -727,7 +720,7 @@
 							"port": "8080",
 							"path": [
 								"comptes",
-								"FR7612345567894430452591384",
+								"FR7612345567894170763038442",
 								"cartes"
 							]
 						}
